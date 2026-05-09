@@ -17,6 +17,7 @@ import Orders from './pages/Orders'
 import ProductDetail from './pages/ProductDetail'
 import Admin from './pages/Admin'
 import Profile from './pages/Profile'
+import Branches from './pages/Branches'
 
 export default function App() {
   return (
@@ -38,6 +39,7 @@ export default function App() {
                   <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
                   <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                   <Route path="/admin" element={<AdminRoute><Admin /></AdminRoute>} />
+                  <Route path="/branches" element={<Branches />} />
                 </Routes>
               </ToastProvider>
             </OrderProvider>

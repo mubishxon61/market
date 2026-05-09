@@ -19,7 +19,7 @@ export default function Cart() {
         <h1 style={{ fontFamily:'var(--font-display)', fontSize:'1.8rem', fontWeight:800, marginBottom:10 }}>Savat bo'sh</h1>
         <p style={{ color:'var(--text2)', marginBottom:28 }}>Xarid qilishni boshlang va mahsulotlar bu yerda paydo bo'ladi</p>
         <Link to="/shop" className="btn btn-primary btn-lg">🛍 Xarid qilish</Link>
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:16, marginTop:40 }}>
+        <div className="cart-empty-features">
           {[['✨','Eng yaxshi narxlar'],['🚚','Tez yetkazib berish'],['💯','Sifat kafolati']].map(([icon,lbl])=>(
             <div key={lbl} className="box" style={{ textAlign:'center', padding:16 }}>
               <div style={{ fontSize:'1.6rem', marginBottom:6 }}>{icon}</div>
@@ -42,7 +42,7 @@ export default function Cart() {
           <p className="page-subtitle">{cart.length} xil mahsulot</p>
         </div>
 
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 360px', gap:28, alignItems:'start' }}>
+        <div className="cart-grid">
           {/* Items */}
           <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
             {cart.map(item => (

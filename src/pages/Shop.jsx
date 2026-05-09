@@ -4,7 +4,7 @@ import { useProducts } from '../context/ProductContext'
 import { useCart } from '../context/CartContext'
 import { useToast } from '../context/ToastContext'
 
-const PER_PAGE = 9
+const PER_PAGE = 40
 
 export default function Shop() {
   const { products, categories } = useProducts()
@@ -16,10 +16,7 @@ export default function Shop() {
   const [sort, setSort] = useState('default')
   const [page, setPage] = useState(1)
 
-  useEffect(() => {
-    setQ(searchParams.get('q') || '')
-    setPage(1)
-  }, [searchParams])
+  useEffect(() => { setQ(searchParams.get('q') || ''); setPage(1) }, [searchParams])
 
   let filtered = products
   if (cat) filtered = filtered.filter(p => p.category === cat)
@@ -31,14 +28,12 @@ export default function Shop() {
       p.category.toLowerCase().includes(lq)
     )
   }
-  if (sort === 'asc') filtered = [...filtered].sort((a,b) => a.price - b.price)
+  if (sort === 'asc')  filtered = [...filtered].sort((a,b) => a.price - b.price)
   if (sort === 'desc') filtered = [...filtered].sort((a,b) => b.price - a.price)
   if (sort === 'name') filtered = [...filtered].sort((a,b) => a.name.localeCompare(b.name))
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE)
   const shown = filtered.slice((page-1)*PER_PAGE, page*PER_PAGE)
-
-  const handleCat = (c) => { setCat(c); setPage(1) }
 
   return (
     <div className="page">
@@ -48,27 +43,28 @@ export default function Shop() {
           <p className="page-subtitle">Barcha mahsulotlar bir joyda</p>
         </div>
 
-        {/* Search + Sort */}
+        {/* Sort bar — cho'zilmasin */}
         <div className="sort-bar">
           <input
-            type="text" value={q} onChange={e => { setQ(e.target.value); setPage(1) }}
-            placeholder="🔍 Mahsulot qidirish..."
-            className="form-input" style={{ maxWidth: 320, marginBottom: 0 }}
+            type="text" value={q}
+            onChange={e => { setQ(e.target.value); setPage(1) }}
+            placeholder="🔍 Qidirish..."
+            className="form-input search-input"
           />
           <select className="sort-select" value={sort} onChange={e => { setSort(e.target.value); setPage(1) }}>
             <option value="default">Saralash</option>
-            <option value="asc">💰 Arzondan qimmatga</option>
-            <option value="desc">💎 Qimmatdan arzonga</option>
-            <option value="name">🔤 Nomi bo'yicha</option>
+            <option value="asc">💰 Arzondan</option>
+            <option value="desc">💎 Qimmatdan</option>
+            <option value="name">🔤 Nomi</option>
           </select>
-          <span className="result-count">{filtered.length} ta mahsulot</span>
+          <span className="result-count">{filtered.length} ta</span>
         </div>
 
         {/* Category filter */}
-        <div className="cat-filter" style={{ marginBottom: 28 }}>
-          <button className={`cat-btn ${cat===''?'active':''}`} onClick={() => handleCat('')}>Hammasi</button>
+        <div className="cat-filter">
+          <button className={`cat-btn ${cat===''?'active':''}`} onClick={() => { setCat(''); setPage(1) }}>Hammasi</button>
           {categories.map(c => (
-            <button key={c.id} className={`cat-btn ${cat===c.name?'active':''}`} onClick={() => handleCat(c.name)}>
+            <button key={c.id} className={`cat-btn ${cat===c.name?'active':''}`} onClick={() => { setCat(c.name); setPage(1) }}>
               {c.name}
             </button>
           ))}
@@ -87,7 +83,7 @@ export default function Shop() {
               {shown.map(item => (
                 <div key={item.id} className="product-card">
                   <div className="card-img-wrap">
-                    <img src={item.img} alt={item.name} loading="lazy" />
+                    <img src={item.img} alt={item.name} loading="lazy" onError={e => { e.target.src='https://via.placeholder.com/400x300?text=Rasm+yuklanmadi' }} />
                     <span className="card-badge">{item.category}</span>
                   </div>
                   <div className="card-body">
@@ -96,17 +92,14 @@ export default function Shop() {
                     <div className="card-desc">{item.desc}</div>
                     <div className="card-price">{item.price.toLocaleString()} so'm</div>
                     <div className="card-actions">
-                      <button
-                        onClick={() => { addToCart(item); toast(`${item.name} savatga qo'shildi!`) }}
-                        className="btn btn-primary btn-sm" style={{ flex:1 }}
-                      >🛒 Savatga</button>
+                      <button onClick={() => { addToCart(item); toast(`Savatga qo'shildi!`) }}
+                        className="btn btn-primary btn-sm" style={{flex:1}}>🛒 Savatga</button>
                       <Link to={`/product/${item.id}`} className="btn btn-outline btn-sm">Ko'rish</Link>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-
             {totalPages > 1 && (
               <div className="pagination">
                 <button className="page-btn" onClick={() => setPage(p => Math.max(1,p-1))} disabled={page===1}>←</button>
